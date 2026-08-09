@@ -1,0 +1,244 @@
+---
+title: "Module 7 Worksheet"
+author: "Prepared by: The STA302H1 Teaching Team"
+output: pdf_document
+geometry: margin=0.5in
+urlcolor: blue
+---
+## Worksheet Information
+**Goal of the worksheet:**  
+  
+The Module 7 worksheet is an opportunity to practice checking and addressing multicollinearity and to better understand their reliance on the assumptions of linear regression models. By completing this worksheet, each student will be developing the skills to achieve the following weekly learning objectives:
+\begin{itemize}
+  \item Correctly identify multicollinearity in a given linear model
+  \item Explain the impact of multicollinearity on a given linear model 
+  \item Integrate identification of multicollinearity correctly into an overall linear regression analysis.
+  \item Determine a preferred linear model based on coefficients of determination and presence of multicollinearity.
+  \item Defend the actions taken to mitigate multicollinearity in a given linear model
+\end{itemize}
+This worksheet, in addition to the remainder of the class time, is **important practice for completing questions on the final exam, and for your final project**.  
+
+\
+**Preparation assumed:**  
+
+\begin{itemize}
+\item Please complete this worksheet after attending your in-person lectures for each week. If you did not attend class, please review the annotated slides posted on Quercus.
+\item Additional R/Coding resources are also linked on the Quercus homepage.
+\end{itemize}
+
+\
+**How to complete this worksheet:**  
+  
+\begin{itemize}
+  \item Students may work and discuss this worksheet in small groups of 2-3 if desired. However {\bf each student} must submit their worksheet to MarkUs to receive their completion credit. Each student most work on their {\bf own copy} of the assignment.
+  \item All the code and course knowledge needed to complete this worksheet has been provided in the class materials. It may help to have these open while working on this document.
+  \item Follow the instructions provided in each question to complete the code.
+  \item DO NOT change the names of the variables that store your final answers.
+  \item When in doubt about a question in the worksheet or your code, ask a TA or the instructor during office hours or on the discussion board.
+\end{itemize}
+  
+\
+**Steps for submitting to MarkUs:**  
+
+\begin{enumerate}
+  \item Go to \href{https://markus.teach.cs.toronto.edu/markus}{MarkUs} and log in using your UofT credentials.
+  \item Select the STA302 course from the list.
+  \item Select Worksheet 6 from the assignment list.
+  \item Under Submissions, upload your Rmd file and select the file name from the list.
+  \item Go to Automated Testing and select Run Tests to check your worksheet answers.
+  \item You can submit as many times as you want, but only your latest submission before the deadline will be counted. 
+  \item It is recommended you submit your file to \href{https://markus.teach.cs.toronto.edu/markus}{MarkUs} after you complete each activity to check your answers before moving on. You can submit multiple times to check your work, as your autograding tokens regenerate over time. 
+  \item Even if you are out of autograding tokens, you can still submit your work. You just cannot check if your answers are correct yourself, but the tests will still be run by the instructor for grading. 
+  \item If you are having trouble with the submission process, please post on the discussion board.
+\end{enumerate}
+
+## What to do if a test fails on MarkUs
+
+\begin{enumerate}
+  \item Don't panic. Your work won't really be graded until the deadline, so start early to make sure you have lots of time to resolve issues before the deadline.
+  \item Read the message to get hints about what the problem is. For example "variable X not present" means that you may have a typo in your variable name.
+  \item Search on the discussion board to see if other classmates have encountered a similar error (and if not, consider posting a screenshot of the error message).
+  \item Sometimes, it will resolve the problem if you type out your values as a number (e.g. var <- 1) instead of a function (e.g. var <- round(...)).
+  \item Come to TA or instructor office hours with your issue.
+\end{enumerate}
+
+
+\newpage
+This week, we will be working with a dataset that comes with lots of interesting problems. The data `pgatour2006.csv` has been loaded to JupyterHub with your RMD worksheet. It contains the variables:
+
+  - $Y$, PrizeMoney = average prize money per tournament
+  - $X_1$, Driving Accuracy is the percent of time a player is able to hit the fairway with his tee shot.
+  - $X_2$, GIR, Greens in Regulation, is the percent of time a player was able to hit the green in regulation. A green is considered hit in regulation if any part of the ball is touching the putting surface and the number of strokes taken is two or less than par.
+  - $X_3$, Putting Average measures putting performance on those holes where the gree is hit in regulation (GIR).
+  - $X_4$, Birdie Conversion % is the percent of time a player makes a birdie or better after hitting the green in regulation
+  - $X_5$, SandSaves % is the percent of time a player was able to get "up and down" once in a greenside sand bunker.
+  - $X_6$, Scrambling % is the percent of time that a player misses the green in regulation, but still makes par or better.
+  - $X_7$, PuttsPerRound is the average total number of putts per round.
+
+We will be using this dataset to practice checking multicollinearity in our models and seeing how this impacts our ability to make decisions about what predictors are important. Further you'll look into how these measures are impacted by the model assumptions.
+
+## 1) Assumptions and the Coefficient of Determination
+
+Seven predictors are listed in the description above. Begin by loading the dataset `pgatour2006.csv` and looking at the `summary()` of this dataset. You are looking for the names of these 7 predictor variables and the response.  
+  
+Fit a multiple linear model using Prize Money as the response and the 7 other variables above as predictors. Replace `NULL` in the variable `full1` with this linear model fit using `lm()`.  
+  
+Replace `NULL` in the variable `proportion1` with the value representing the proportion of variation in Prize Money that has been explained by the model. Round this numerical value to 2 decimal places.
+
+```{r}
+# load the data
+pga <- read.csv(file="pgatour2006.csv", header=T)
+
+# fit the linear model with 7 listed predictors and response Prize Money
+full1 <- NULL
+
+
+# what is the proportion of variation in Prize Money explained by this model?
+proportion1 <- NULL
+```
+
+
+We performed a transformation last week to correct model violations. Run the code below to view the pairwise scatterplots of the predictors, the residual vs fitted plot, and the QQ plot for this model.
+
+```{r}
+# uncomment below to run plots
+#pairs(pga[,c(5,6,7,8,9,10,12)])
+#par(mfrow=c(1,2))
+#plot(resid(full1) ~ fitted(full1), ylab="Residuals", xlab="Fitted")
+#qqnorm(resid(full1))
+#qqline(resid(full1))
+```
+
+Use a log-transformation on the response to address the assumptions by replacing `NULL` in `lnPrizeMoney` with the `log()` of Prize Money. Fit a new model using this transformed response variable. Then replicate the same plots as above for this new model.  
+  
+What is the proportion of variation explained in this new model? Replace `NULL` in `proportion2` with this value from the model summary, rounded to 2 decimal places.
+
+```{r}
+# create transformed response
+lnPrizeMoney <- NULL
+
+# refit the model
+full2 <- NULL
+
+# replicate the above plots for this new model
+
+
+
+# what is the proportion of variation explained in this model?
+proportion2 <- NULL
+```
+
+**Question: Why did the proportion of variation explained by the model increase for full2 compared to full1?**  
+TYPE YOUR ANSWER BELOW:  
+  
+  
+## 2) Assessing Multicollinearity
+
+Only GIR and BirdieConversion are significant in the model `full2`. Fit a model in `reduced1` that only includes these two predictors. Look at the summary of this model. Which of the coefficients of determinations would you use to determine if `reduced1` is a better fitting model than `full2`? Enter this value from the R output of `reduced1`, rounded to 3 decimal places, in `proportion3`.  
+  
+Then conduct a partial F test between `reduced1` and `full2`. 
+
+```{r}
+# fit a reduced model as described above
+reduced1 <- NULL
+
+
+# what value would you use to compare fit between this one and full2?
+proportion3 <- NULL
+
+# partial F test
+
+```
+
+Since the test tells us we removed a predictor that was linearly related to `lnPrizeMoney` but all the predictors removed were not significant, we should investigate whether multicollinearity is at play.  
+  
+Load the `car` library by uncommenting the line of code, running that line, then re-commenting that line again.  
+  
+Then use the `vif()` function to check for the presence of multicollinearity in the model `full2`. Enter the VIF value reported for the predictor `PuttingAverage` by replacing `NULL` in the variable `inflation1` (rounded to 2 decimal places).
+
+```{r}
+####################################
+### uncomment, run, comment again###
+#install.packages("car")
+#library(car)
+
+# find the VIF for each predictor of full2
+
+####################################
+
+# what is the vif value for PuttingAverage
+inflation1 <- NULL
+```
+
+**Question: Which predictors have severe multicollinearity? Would you have expected this from any of the plots you created earlier or from what the variables themselves measure?**  
+TYPE YOUR ANSWER BELOW:  
+  
+  
+  
+## 3) How is VIF computed?
+
+We can see how this VIF value was found. To do this, we first fit a model that uses `PuttingAverage` as the RESPONSE, and then the remaining 6 predictors as predictors. This is done using the same `lm()` function to fit a linear model as always. Fit this model and save it in `Xmodel`.  
+  
+What proportion of the variation in `PuttingAverage` is explained by the other predictors? Enter this numerical value, rounded to 2 decimal places, by replacing `NULL` in the variable `proportion4`.
+
+```{r}
+# fit a model using PuttingAverage as response
+Xmodel <- NULL
+
+
+# what is the proportion of variation in PuttingAverage explained by model?
+proportion4 <- NULL
+```
+
+Notice that this number in `proportion4` is quite close to 1. To compute the VIF value for `PuttingAverage` manually, use the formula $\frac{1}{1-R^2}$ and input `proportion4` for $R^2$. Do this calculation and store this in `inflation2`.
+
+```{r}
+# manually compute VIF using proportion4
+inflation2 <- NULL
+```
+
+**Question: What does this number in inflation2 mean?**  
+TYPE YOUR ANSWER BELOW:  
+  
+
+
+## 4) Addressing Multicollinearity
+
+One approach to addressing and reducing multicollinearity in the model is to remove at least one predictor with very large VIF values. Create a new model in `reduced2` that fits the same response and predictors as `full2` but omits `PuttsPerRound`. Then check the `vif` of the predictors in `reduced2`.  
+  
+What is the largest VIF value present in `reduced2`? Enter this value, rounded to 2 decimal places, in the variable `inflation3`.
+
+```{r}
+# fit a model omitting PuttsPerRound
+reduced2 <- NULL
+
+####################################
+### uncomment, run, comment again###
+# check multicollinearity with vif (comment out before submitting)
+
+####################################
+
+# largest vif present
+inflation3 <-  NULL
+```
+
+**Question: Is multicollinearity still present?**  
+TYPE YOUR ANSWER BELOW:  
+  
+ 
+  
+Finally, look at the summary of `reduced2` and take note of which predictors are now significantly linearly related to the response. Fit a reduced model in `reduced3` that only includes the significant predictors. Perform a partial F test to determine whether `reduced2` or `reduced3` is the better model. Finally, replace `NULL` in `proportion5` with the proportion of variation explained by reduced3 (rounded to 2 decimal places).
+
+```{r}
+# fit a reduced model with the significant X's from reduced2
+reduced3 <- NULL
+
+# partial F test between reduced2 and reduced3
+
+
+# what proportion of variation is explained by reduced3?
+proportion5 <- NULL
+```
+
+-----------------
+END OF WORKSHEET - BE SURE TO SUBMIT YOUR WORKSHEET ON MARKUS TO RECEIVE COMPLETION CREDIT  
