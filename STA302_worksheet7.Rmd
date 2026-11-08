@@ -156,6 +156,8 @@ Load the `car` library by uncommenting the line of code, running that line, then
   
 Then use the `vif()` function to check for the presence of multicollinearity in the model `full2`. Enter the VIF value reported for the predictor `PuttingAverage` by replacing `NULL` in the variable `inflation1` (rounded to 2 decimal places).
 
+Comment out the `vif()` function before you submit -- it may cause issues with the MarkUs server.
+
 ```{r}
 ####################################
 ### uncomment, run, comment again###
@@ -214,7 +216,7 @@ reduced2 <- NULL
 
 ####################################
 ### uncomment, run, comment again###
-# check multicollinearity with vif (comment out before submitting)
+# check multicollinearity with vif() (comment out the line with vif() before submitting)
 
 ####################################
 
